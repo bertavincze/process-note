@@ -65,8 +65,11 @@ namespace ProcessNote
 
         private void textBox1_Leave(object sender, EventArgs e)
         {
-            Form warning = new Warning("Your comment is not saved yet!");
-            warning.ShowDialog();
+            if (!button1.ContainsFocus)
+            {
+                Form warning = new Warning("Your comment is not saved yet!");
+                warning.ShowDialog();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -75,7 +78,13 @@ namespace ProcessNote
 
             if (textBox1.Text != null && process != null)
             {
-                processComments.Add(process, textBox1.Text);
+                if (!processComments.ContainsKey(process))
+                {
+                    processComments.Add(process, textBox1.Text);
+                } else
+                {
+                    processComments[process] = textBox1.Text;
+                }
             }
         }
 

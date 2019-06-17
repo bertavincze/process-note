@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.processNoteBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.listView = new System.Windows.Forms.ListView();
             this.PID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ProcessName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -43,6 +42,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.processNoteBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.processNoteBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,6 +53,7 @@
             this.ProcessName});
             this.listView.FullRowSelect = true;
             this.listView.Location = new System.Drawing.Point(12, 12);
+            this.listView.MultiSelect = false;
             this.listView.Name = "listView";
             this.listView.Size = new System.Drawing.Size(417, 167);
             this.listView.TabIndex = 0;
@@ -88,6 +89,7 @@
             this.running,
             this.start});
             this.listView1.Location = new System.Drawing.Point(12, 217);
+            this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(417, 59);
             this.listView1.TabIndex = 3;
