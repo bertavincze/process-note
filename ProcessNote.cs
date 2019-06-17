@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace ProcessNote
 {
     public partial class ProcessNote : Form
     {
+        private Process[] processes;
+        private Dictionary<Process, string> processComments;
+
         public ProcessNote()
         {
             InitializeComponent();
+            processes = Process.GetProcesses();
+            processComments = new Dictionary<Process, string>();
         }
-
-        private Process[] processes = Process.GetProcesses();
 
         private void ProcessNote_Load(object sender, EventArgs e)
         {
@@ -29,52 +33,72 @@ namespace ProcessNote
                 listView1.Items.RemoveAt(0);
             }
 
-            if (listView.SelectedItems.Count > 0 && listView.SelectedItems[0] != null)
+            if (textBox1.Text != null)
             {
-                string id = listView.SelectedItems[0].Text;
+                textBox1.Clear();
+            }
 
-                foreach (Process process in processes)
+            Process process = GetSelectedProcess();
+
+            if (process != null)
+            {
+                PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName, true);
+                PerformanceCounter ramCounter = new PerformanceCounter("Process", "Private Bytes", process.ProcessName, true);
+                double cpu = Math.Round(cpuCounter.NextValue() / Environment.ProcessorCount, 2);
+                double ram = Math.Round(ramCounter.NextValue() / 1024 / 1024, 2);
+
+                DateTime startTime = process.StartTime;
+                TimeSpan runningTime = DateTime.Now - startTime;
+
+                string[] row = new string[] { cpu + "%", ram + " MB", runningTime.ToString(), startTime.ToString() };
+                listView1.Items.Add(new ListViewItem(row));
+
+                foreach (Process p in processComments.Keys)
                 {
-                    if (process.Id.ToString() == id)
+                    if (process == p)
                     {
-                        PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName, true);
-                        PerformanceCounter ramCounter = new PerformanceCounter("Process", "Private Bytes", process.ProcessName, true);
-                        double cpu = Math.Round(cpuCounter.NextValue() / Environment.ProcessorCount, 2);
-                        double ram = Math.Round(ramCounter.NextValue() / 1024 / 1024, 2);
-
-                        DateTime startTime = process.StartTime;
-                        TimeSpan runningTime = DateTime.Now - startTime;
-
-                        string[] row = new string[] { cpu + "%", ram + " MB", runningTime.ToString(), startTime.ToString()};
-                        listView1.Items.Add(new ListViewItem(row));
+                        textBox1.Text = processComments[p];
                     }
                 }
-
-                // TODO: comment
             }
         }
 
         private void textBox1_Leave(object sender, EventArgs e)
         {
-            // Warning popup for unsaved comment
+            Form warning = new Warning("Your comment is not saved yet!");
+            warning.ShowDialog();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // save comment in memory
+            Process process = GetSelectedProcess();
+
+            if (textBox1.Text != null && process != null)
+            {
+                processComments.Add(process, textBox1.Text);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
+        { 
+            Process selectedProcess = GetSelectedProcess();
+            Form threadsList = new ThreadsList(selectedProcess);
+            threadsList.ShowDialog();
+        }
+
+        private Process GetSelectedProcess()
         {
-            foreach (Process process in processes)
-            {   
-                if (process.Id.ToString() == listView.SelectedItems[0].Text)
+            if (listView.SelectedItems.Count > 0 && listView.SelectedItems[0] != null)
+            {
+                foreach (Process process in processes)
                 {
-                    Process selectedProcess = process;
-                    Form threadsList = new ThreadsList(selectedProcess);
-                    threadsList.ShowDialog();
+                    if (process.Id.ToString() == listView.SelectedItems[0].Text)
+                    {
+                        return process;
+                    }
                 }
             }
+            return null;
         }
     }
 }

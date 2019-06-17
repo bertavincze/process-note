@@ -60,6 +60,12 @@
     <Compile Include="ThreadsList.Designer.cs">
       <DependentUpon>ThreadsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Warning.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Warning.Designer.cs">
+      <DependentUpon>Warning.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ProcessNote.resx">
       <DependentUpon>ProcessNote.cs</DependentUpon>
     </EmbeddedResource>
@@ -74,6 +80,9 @@
     </Compile>
     <EmbeddedResource Include="ThreadsList.resx">
       <DependentUpon>ThreadsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Warning.resx">
+      <DependentUpon>Warning.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\DataSources\ProcessNote.datasource" />
     <None Include="Properties\Settings.settings">
