@@ -7,19 +7,19 @@ namespace ProcessNote
 {
     public partial class ProcessNote : Form
     {
-        private Process[] processes;
-        private Dictionary<Process, string> processComments;
+        public Process[] Processes { get; set; }
+        public Dictionary<Process, string> ProcessComments { get; set; }
 
         public ProcessNote()
         {
             InitializeComponent();
-            processes = Process.GetProcesses();
-            processComments = new Dictionary<Process, string>();
+            Processes = Process.GetProcesses();
+            ProcessComments = new Dictionary<Process, string>();
         }
 
         private void ProcessNote_Load(object sender, EventArgs e)
         {
-            foreach (Process process in processes)
+            foreach (Process process in Processes)
             {
                 string[] row = new string[] { process.Id.ToString(), process.ProcessName };
                 listView.Items.Add(new ListViewItem(row));
@@ -53,17 +53,17 @@ namespace ProcessNote
                 string[] row = new string[] { cpu + "%", ram + " MB", runningTime.ToString(), startTime.ToString() };
                 listView1.Items.Add(new ListViewItem(row));
 
-                foreach (Process p in processComments.Keys)
+                foreach (Process p in ProcessComments.Keys)
                 {
                     if (process == p)
                     {
-                        textBox1.Text = processComments[p];
+                        textBox1.Text = ProcessComments[p];
                     }
                 }
             }
         }
 
-        private void textBox1_Leave(object sender, EventArgs e)
+        private void TextBox1_Leave(object sender, EventArgs e)
         {
             if (!button1.ContainsFocus)
             {
@@ -72,23 +72,23 @@ namespace ProcessNote
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             Process process = GetSelectedProcess();
 
             if (textBox1.Text != null && process != null)
             {
-                if (!processComments.ContainsKey(process))
+                if (!ProcessComments.ContainsKey(process))
                 {
-                    processComments.Add(process, textBox1.Text);
+                    ProcessComments.Add(process, textBox1.Text);
                 } else
                 {
-                    processComments[process] = textBox1.Text;
+                    ProcessComments[process] = textBox1.Text;
                 }
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         { 
             Process selectedProcess = GetSelectedProcess();
             Form threadsList = new ThreadsList(selectedProcess);
@@ -99,7 +99,7 @@ namespace ProcessNote
         {
             if (listView.SelectedItems.Count > 0 && listView.SelectedItems[0] != null)
             {
-                foreach (Process process in processes)
+                foreach (Process process in Processes)
                 {
                     if (process.Id.ToString() == listView.SelectedItems[0].Text)
                     {

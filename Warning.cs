@@ -5,7 +5,7 @@ namespace ProcessNote
 {
     public partial class Warning : Form
     {
-        string Message;
+        public string Message { get; set; }
 
         public Warning(string message)
         {
@@ -18,7 +18,7 @@ namespace ProcessNote
             label1.Text = Message;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             Close();
         }
